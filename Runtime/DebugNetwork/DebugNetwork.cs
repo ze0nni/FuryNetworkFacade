@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Fury.DebugNetwork
 {
@@ -9,9 +10,19 @@ namespace Fury.DebugNetwork
             return Task.CompletedTask;
         }
 
-        public IStorage<T> Storage<T>(string key) where T : class
+        public async Task<string> LoadData(string key)
         {
-            return new Storage<T>(key);
+            return PlayerPrefs.GetString(key);
+        }
+
+        public void SaveData(string key, string data)
+        {
+            PlayerPrefs.SetString(key, data);
+        }
+
+        public void DeleteData(string key)
+        {
+            PlayerPrefs.DeleteKey(key);
         }
     }
 }

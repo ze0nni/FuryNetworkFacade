@@ -23,5 +23,10 @@ namespace Fury {
         {
             return _network.Init();
         }
+
+        public static IStorage<T> Storage<T>(string key) where T : class
+        {
+            return new Storage<T>(_network, $"{key}%{typeof(T).FullName}");
+        }
     }
 }
