@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,18 +36,8 @@ namespace Fury
                 if (String.IsNullOrEmpty(str))
                 {
                     return null;
-                }
-                var bytes = Convert.FromBase64String(str);
-                if (bytes.Length == 0)
-                {
-                    return null;
-                }
-
-                _ms.SetLength(0);
-                _ms.Write(bytes);
-                _ms.Position = 0;
-                var bf = new BinaryFormatter();
-                return (T)bf.Deserialize(_ms);
+                }                
+                return JsonConvert.DeserializeObject<T>(str);
             }
             catch (Exception exc)
             {
@@ -57,12 +48,7 @@ namespace Fury
 
         public void Save(T data)
         {
-            _ms.SetLength(0);
-            var bf = new BinaryFormatter();
-            bf.Serialize(_ms, data);
-            var bytes = _ms.ToArray();
-            var str = Convert.ToBase64String(bytes);
-            _network.SaveData(_key, str);
+            _network.SaveData(_key, JsonConvert.SerializeObject(data));
         }
 
         public void Delete()
