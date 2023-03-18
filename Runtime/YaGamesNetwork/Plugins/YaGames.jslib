@@ -72,6 +72,24 @@ mergeInto(LibraryManager.library, {
 			})
 	},
 
+	YaGamesShowFullscreenAd: function() {
+		var SDK = window.ySDK;
+
+		console.log("YaGames.showFullscreenAdv: ...");
+		SDK.adv.showFullscreenAdv({
+			callbacks: {
+				onClose: function(wasShown) {
+					console.log("YaGames.YaGamesShowFullscreenAd: open");
+					SendMessage("Fury.NetworkFacade", "OnFullscreenClose", wasShown);
+				},
+				onError: function(error) {
+					console.error("YaGames.YaGamesShowFullscreenAd: " + error);
+					SendMessage("Fury.NetworkFacade", "OnFullscreenError", error.toString());
+				}
+			}
+		})
+	},
+
 	YaGamesShowRewardAd: function() {
 		var SDK = window.ySDK;
 
@@ -91,7 +109,7 @@ mergeInto(LibraryManager.library, {
 					SendMessage("Fury.NetworkFacade", "OnRewardClose");
 				}, 
 				onError: (e) => {
-					console.log("YaGames.showRewardedVideo: error. " + e);
+					console.error("YaGames.showRewardedVideo: error. " + e);
 					SendMessage("Fury.NetworkFacade", "OnRewardError", e.toString());
 				}
 			}

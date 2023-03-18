@@ -10,6 +10,8 @@ namespace Fury
         void SaveData(string key, string data);
         void DeleteData(string key);
 
+        Task<bool> ShowFullscreenVideo();
+
         bool HasRewardVideo { get; }
         Task<bool> ShowRewardVideo();
     }

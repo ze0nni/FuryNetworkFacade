@@ -82,6 +82,36 @@ namespace Fury.YaGamesNetwork
 
         #endregion
 
+        #region FullscreenVideo
+        TaskCompletionSource<bool> _fullscreenVideoSource;
+
+        public Task<bool> ShowFullscreenVideo()
+        {
+            Assert.IsNull(_fullscreenVideoSource, "Fullscreen video not complete");
+
+            _fullscreenVideoSource = new TaskCompletionSource<bool>();
+
+            YASDK.YaGamesShowFullscreenAd();
+
+            return _fullscreenVideoSource.Task;
+        }
+
+        public void OnFullscreenClose(bool wasShown)
+        {
+            var src = _fullscreenVideoSource;
+            _fullscreenVideoSource = null;
+            src.SetResult(wasShown);
+        }
+
+        public void OnFullscreenError(string error)
+        {
+            var src = _fullscreenVideoSource;
+            _fullscreenVideoSource = null;
+            src.SetException(new Exception(error));
+        }
+
+        #endregion
+
         #region RewardVideo
 
         TaskCompletionSource<bool> _rewardVideoSource;

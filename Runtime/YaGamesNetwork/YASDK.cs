@@ -14,6 +14,9 @@ namespace Fury.YaGamesNetwork
         public static extern void YaGamesSetData(string json);
 
         [DllImport("__Internal")]
+        public static extern void YaGamesShowFullscreenAd();
+
+        [DllImport("__Internal")]
         public static extern void YaGamesShowRewardAd();
     }
 }

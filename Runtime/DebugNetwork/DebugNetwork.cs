@@ -23,6 +23,11 @@ namespace Fury.DebugNetwork
             PlayerPrefs.SetString(key, data);
         }
 
+        public Task<bool> ShowFullscreenVideo()
+        {
+            return Task.FromResult(_prefs.ShowFullscreenVideoSuccess);
+        }
+
         public void DeleteData(string key)
         {
             PlayerPrefs.DeleteKey(key);

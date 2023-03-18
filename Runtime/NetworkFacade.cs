@@ -29,6 +29,8 @@ namespace Fury {
             return new Storage<T>(_network, $"{key}%{typeof(T).FullName}");
         }
 
+        public static Task<bool> ShowFullscreenVideo() => _network.ShowFullscreenVideo();
+
         public static bool HasRewardVideo() => _network.HasRewardVideo;
 
         public static Task<bool> ShowRewardVideo() => _network.ShowRewardVideo();
