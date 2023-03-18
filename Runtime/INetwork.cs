@@ -4,7 +4,7 @@ namespace Fury
 {
     public interface INetwork
     {
-        Task Init();
+        Task<NetworkUser> Init(NetworkController controller);
 
         Task<string> LoadData(string key);
         void SaveData(string key, string data);

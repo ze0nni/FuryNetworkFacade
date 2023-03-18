@@ -32,7 +32,6 @@ namespace Fury.YaGamesNetwork
 
         public string ToJson(){
             var json = JsonConvert.SerializeObject(_cache);
-            Debug.Log($">> {json}");
             return json;
         }
 

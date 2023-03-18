@@ -5,12 +5,18 @@ namespace Fury.DebugNetwork
 {
     public class DebugNetwork : INetwork
     {
+        NetworkController _controller;
+        NetworkUser _user;
         DebugNetworkPrefs _prefs;
 
-        public Task Init()
+        public Task<NetworkUser> Init(NetworkController controller)
         {
+            _controller = controller;
             _prefs = DebugNetworkPrefs.Instance;
-            return Task.CompletedTask;
+            _user = _controller.NewUser(_prefs.UserId);
+            _user.UpdateNickname(_prefs.UserNickname);
+            _user.UpdatePhoto(_prefs.UserPhoto);
+            return Task.FromResult(_user);
         }
 
         public async Task<string> LoadData(string key)

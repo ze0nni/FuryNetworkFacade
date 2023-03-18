@@ -1,4 +1,5 @@
 using AOT;
+using Newtonsoft.Json;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -9,20 +10,39 @@ namespace Fury.YaGamesNetwork
 {
     public class YaGamesNetwork : MonoBehaviour, INetwork
     {
+        private NetworkController _controller;
+        private NetworkUser _user;
+
         #region Init
-        TaskCompletionSource<bool> _initTaskSrc;
-        public Task Init()
+        TaskCompletionSource<NetworkUser> _initTaskSrc;
+        public Task<NetworkUser> Init(NetworkController controller)
         {
-            _initTaskSrc = new TaskCompletionSource<bool>();
+            _controller = controller;
+
+            _initTaskSrc = new TaskCompletionSource<NetworkUser>();
             YASDK.YaGamesInit();
             return _initTaskSrc.Task;
         }
 
-        public void OnInitCallbackOk()
+        class InitPayload
         {
-            _initTaskSrc.SetResult(true);
+            public string id;
+            public string nickname;
+            public string photo;
+        }
+
+        public void OnInitCallbackOk(string payloadRaw)
+        {
+            var payload = JsonConvert.DeserializeObject<InitPayload>(payloadRaw);
+
+            _user = _controller.NewUser(payload.id);
+            _user.UpdateNickname(payload.nickname);
+            _user.UpdatePhoto(payload.photo);
+
+            _initTaskSrc.SetResult(_user);
             _initTaskSrc = null;
-            Debug.Log($"{nameof(YASDK.YaGamesInit)}: ok");
+
+            Debug.Log($"{nameof(YASDK.YaGamesInit)}: ok, {payloadRaw}");
         }
 
         public void OnInitCallbackError(string error)

@@ -26,7 +26,14 @@ mergeInto(LibraryManager.library, {
 					if (sdk.features.LoadingAPI) {
 						sdk.features.LoadingAPI.ready()
 					}
-					SendMessage("Fury.NetworkFacade", "OnInitCallbackOk");
+					return sdk.getPlayer();
+				})
+				.then(player => {
+					SendMessage("Fury.NetworkFacade", "OnInitCallbackOk", JSON.stringify({
+						"id": player.getUniqueID(),
+						"nickname": player.getName(),
+						"photo": player.getPhoto()
+					}));
 				})
 				.catch(error => {
 					console.error("YaGames.init: ", error);
