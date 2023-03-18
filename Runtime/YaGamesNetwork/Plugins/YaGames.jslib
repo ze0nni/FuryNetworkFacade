@@ -40,7 +40,7 @@ mergeInto(LibraryManager.library, {
 		SDK
 			.getPlayer()
 			.then(player => player.getData())
-			.then(data => {				
+			.then(data => {
 				SendMessage("Fury.NetworkFacade", "OnGetDataCallbackOk", JSON.stringify(data));
 			})
 			.catch(error => {
@@ -70,5 +70,31 @@ mergeInto(LibraryManager.library, {
 			.catch(error => {
 				console.error("YaGames.SetData: " + error)
 			})
+	},
+
+	YaGamesShowRewardAd: function() {
+		var SDK = window.ySDK;
+
+		console.log("YaGames.showRewardedVideo: ...");
+		SDK.adv.showRewardedVideo({
+			callbacks: {
+				onOpen: () => {
+					console.log("YaGames.showRewardedVideo: open");
+					SendMessage("Fury.NetworkFacade", "OnRewardOpen");
+				},
+				onRewarded: () => {
+					console.log("YaGames.showRewardedVideo: rewarded");
+					SendMessage("Fury.NetworkFacade", "OnRewarded");
+				},
+				onClose: () => {
+					console.log("YaGames.showRewardedVideo: close");
+					SendMessage("Fury.NetworkFacade", "OnRewardClose");
+				}, 
+				onError: (e) => {
+					console.log("YaGames.showRewardedVideo: error. " + e);
+					SendMessage("Fury.NetworkFacade", "OnRewardError", e.toString());
+				}
+			}
+		})
 	}
 });

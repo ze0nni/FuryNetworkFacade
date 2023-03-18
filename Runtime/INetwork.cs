@@ -9,5 +9,8 @@ namespace Fury
         Task<string> LoadData(string key);
         void SaveData(string key, string data);
         void DeleteData(string key);
+
+        bool HasRewardVideo { get; }
+        Task<bool> ShowRewardVideo();
     }
 }

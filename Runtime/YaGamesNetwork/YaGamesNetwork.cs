@@ -3,6 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Fury.YaGamesNetwork
 {
@@ -77,6 +78,74 @@ namespace Fury.YaGamesNetwork
             var cache = await GetStorageCache();
             cache.Delete(key);
             YASDK.YaGamesSetData(cache.ToJson());
+        }
+
+        #endregion
+
+        #region RewardVideo
+
+        TaskCompletionSource<bool> _rewardVideoSource;
+        bool _rewardOpened;
+        bool _rewarded;
+        string _rewardedError;
+
+        public bool HasRewardVideo => true;
+
+        public Task<bool> ShowRewardVideo()
+        {
+            Assert.IsNull(_rewardVideoSource, "Reward video not complete");
+
+            _rewardVideoSource = new TaskCompletionSource<bool>();
+            _rewardOpened = false;
+            _rewarded = false;
+            _rewardedError = null;
+
+            YASDK.YaGamesShowRewardAd();
+
+            return _rewardVideoSource.Task;
+        }
+
+        public void OnRewardOpen()
+        {
+            Debug.Log($"{nameof(YASDK.YaGamesShowRewardAd)}: open");
+
+            _rewardOpened = true;
+        }
+
+        public void OnRewarded()
+        {
+            Debug.Log($"{nameof(YASDK.YaGamesShowRewardAd)}: rewarded");
+            _rewarded = true;
+        }
+
+        public void OnRewardClose()
+        {
+            Debug.Log($"{nameof(YASDK.YaGamesShowRewardAd)}: close");
+
+            var src = _rewardVideoSource;
+            _rewardVideoSource = null;
+            if (_rewardedError != null)
+            {
+                src.SetException(new Exception(_rewardedError));
+            } else
+            {
+                src.SetResult(_rewarded);
+            }
+        }
+
+        public void OnRewardError(string error)
+        {
+            Debug.LogError($"{nameof(YASDK.YaGamesShowRewardAd)}: {error}");
+
+            if (_rewardOpened)
+            {
+                _rewardedError = error;
+            } else
+            {
+                var src = _rewardVideoSource;
+                _rewardVideoSource = null;
+                src.TrySetException(new Exception(error));
+            }
         }
 
         #endregion
