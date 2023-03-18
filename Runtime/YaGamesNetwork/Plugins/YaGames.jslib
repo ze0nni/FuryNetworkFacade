@@ -87,6 +87,7 @@ mergeInto(LibraryManager.library, {
 			callbacks: {
 				onClose: function(wasShown) {
 					console.log("YaGames.YaGamesShowFullscreenAd: open");
+					window.focus();
 					SendMessage("Fury.NetworkFacade", "OnFullscreenClose", wasShown);
 				},
 				onError: function(error) {
@@ -113,6 +114,7 @@ mergeInto(LibraryManager.library, {
 				},
 				onClose: () => {
 					console.log("YaGames.showRewardedVideo: close");
+					window.focus();
 					SendMessage("Fury.NetworkFacade", "OnRewardClose");
 				}, 
 				onError: (e) => {
